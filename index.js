@@ -11,6 +11,7 @@ app.use('/product', require('./routes/productRoute'));
 app.use('/user', require('./routes/UserRoute'));
 app.use('/message', require('./routes/emailRoute'));
 app.use('/order',require('./routes/orderRoute'));
+app.use('/subscribe', require('./routes/subscribeRoute'));
 
 mongoose.connect(process.env.mongoosestring)
 .then(()=>{

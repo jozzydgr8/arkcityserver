@@ -43,7 +43,7 @@ const verifyAndPostOrder=async (req, res) => {
     };
 
     const order = await Order.create({
-      email: paymentData.customer.email,
+      email: paymentData.customer.email.toLowerCase().trim(),
       reference: paymentData.reference,
       amount: paymentData.amount / 100,
       status: paymentData.status,
