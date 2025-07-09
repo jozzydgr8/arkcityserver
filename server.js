@@ -14,10 +14,9 @@ app.use('/order',require('./routes/orderRoute'));
 
 mongoose.connect(process.env.mongoosestring)
 .then(()=>{
-    console.log('mongodb connected')
+   app.listen(process.env.PORT, ()=>{
+    console.log(`server live at ${process.env.PORT}`)
+})
 }).catch(error=>{
     console.error(error)
-})
-app.listen(process.env.PORT, ()=>{
-    console.log(`server live at ${process.env.PORT}`)
 })
