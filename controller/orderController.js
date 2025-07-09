@@ -53,6 +53,7 @@ const verifyAndPostOrder=async (req, res) => {
       phone: getMetadata('phone'),
       product:getMetadata('product'),
       category:getMetadata('category'),
+      notes:getMetadata('notes')
     });
     const emailBody = {
       recipient_email: paymentData.customer.email,

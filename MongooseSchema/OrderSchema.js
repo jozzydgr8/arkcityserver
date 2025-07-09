@@ -44,6 +44,9 @@ const orderSchema = new mongoose.Schema({
   category:{
     type:String,
     required:true
+  },
+  notes:{
+    type:String
   }
 }, { timestamps: true });
 
