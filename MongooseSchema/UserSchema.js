@@ -73,7 +73,7 @@ UserSchema.statics.forgotPassword = async function(email) {
     message: `<p>You requested a password reset.</p>
            <p>Click <a href="${resetLink}">here</a> to reset your password. Link expires in 15 minutes.</p>`
   };
-  sendEmail(emailbody)
+  const send = await sendEmail(emailbody)
  
 
   return { message: 'Password reset email sent' };

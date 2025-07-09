@@ -25,26 +25,26 @@ router.post('/', async(req,res)=>{
        const data =await Subscribe.create({email:email});
        const emailbody = {
         recipient_email:email,
-        subject:`Thanks for subscribing! Welcome to the community`,
+        subject:`Thanks for subscribing!`,
         message:`<p>Hi there,</p>
 
-<p>Thanks for subscribing to our newsletter! 🎉</p>
+                <p>Thanks for subscribing to our newsletter! 🎉</p>
 
-<p>You’ll now receive:</p>
-<ul>
-  <li>📢 The latest news and updates</li>
-  <li>📝 Exclusive content and tips</li>
-  <li>🎁 Special offers and early access</li>
-</ul>
+                <p>You’ll now receive:</p>
+                <ul>
+                <li>📢 The latest news and updates</li>
+                <li>📝 Exclusive content and tips</li>
+                <li>🎁 Special offers and early access</li>
+                </ul>
 
-<p>We’re excited to have you with us. Stay tuned for great things ahead!</p>
+                <p>We’re excited to have you with us. Stay tuned for great things ahead!</p>
 
-<p>If you ever have questions or feedback, just reply to this email — we’d love to hear from you.</p>
+                <p>If you ever have questions or feedback, just reply to this email — we’d love to hear from you.</p>
 
-<p>Welcome aboard!<br />
-— The <strong>Your Company</strong> Team</p>`
+                <p>Welcome aboard!<br />
+                — The <strong>ArkCity</strong> Team</p>`
        }
-       sendEmail(emailbody);
+       const send = await sendEmail(emailbody);
        res.status(200).json({message:'success'});
     }catch(error){
         res.status(400).json({error:error})

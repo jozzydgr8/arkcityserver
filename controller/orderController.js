@@ -1,6 +1,7 @@
 const axios = require('axios');
 const Order = require('../MongooseSchema/OrderSchema');
 const { default: mongoose } = require('mongoose');
+const sendEmail = require('../config/mailer');
 
 
 //get route
@@ -50,13 +51,22 @@ const verifyAndPostOrder=async (req, res) => {
       name: getMetadata('name'),
       address: getMetadata('address'),
       phone: getMetadata('phone'),
+      product:getMetadata('product'),
+      category:getMetadata('category'),
     });
-
+    const emailBody = {
+      recipient_email: paymentData.customer.email,
+      subject:`Order Succesful`,
+      message:`Your order has been succesfully received with orderId:${order._id}`
+    }
+    const send = await sendEmail(emailBody);
     res.status(200).json({ status: 'success', data: order });
 
   } catch (error) {
     console.error(error);
     res.status(500).json({ status: "error", message: "Verification failed" });
+  }finally{
+    
   }
 }
 const updateOrder = async (req,res)=>{

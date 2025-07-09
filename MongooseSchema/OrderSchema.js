@@ -36,6 +36,14 @@ const orderSchema = new mongoose.Schema({
     required:true,
     default:'pending',
     enum:['pending', 'processing', 'shipped','completed']
+  },
+  product:{
+    type:String,
+    required:true,
+  },
+  category:{
+    type:String,
+    required:true
   }
 }, { timestamps: true });
 
