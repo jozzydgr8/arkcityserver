@@ -65,8 +65,8 @@ UserSchema.statics.forgotPassword = async function(email) {
   user.resetTokenExpires = resetTokenExpires;
   await user.save();
   
-  const resetLink = `http://localhost:3000/reset-password?token=${resetToken}&email=${user.email}`; // or your frontend URL
-  console.log(resetLink);
+  const resetLink = `https://arkcitylp.com/admin_jctbdil1$/reset-password?token=${resetToken}&email=${user.email}`; // or your frontend URL
+  // console.log(resetLink);
   const emailbody = {
     recipient_email: user.email,
     subject: 'Password Reset Request',
