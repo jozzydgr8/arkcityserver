@@ -133,7 +133,15 @@ UserSchema.statics.resetPassword = async function({ email, newPassword }) {
   const salt = await bcrypt.genSalt(10);
   const hash = await bcrypt.hash(newPassword, salt);
 
-  const updatedUser = await this.findOneAndUpdate({ email }, { password: hash }, { new: true });
+  const updatedUser = await this.findOneAndUpdate(
+  { email },
+  {
+    password: hash,
+    resetToken: null,
+    resetTokenExpires: null
+  },
+  { new: true }
+);
   return updatedUser;
 };
 

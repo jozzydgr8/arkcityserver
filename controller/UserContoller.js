@@ -112,7 +112,7 @@ const updateAfterResetPassword = async (req, res) => {
   const { token, newPassword } = req.body;
 
   try {
-    const user = await User.findOne({ email},{resetToken:token});
+    const user = await User.findOne({ email, resetToken: token });;
 
     if (!user) {
      return res.status(400).json({error:'Invalid or expired token'});
@@ -122,7 +122,8 @@ const updateAfterResetPassword = async (req, res) => {
     }
 
     // Update password
-   const userreset = User.resetPassword({email, newPassword})
+   const userreset = await User.resetPassword({email, newPassword});
+   
 
     res.status(200).json({ message: 'Password has been reset successfully' });
 
