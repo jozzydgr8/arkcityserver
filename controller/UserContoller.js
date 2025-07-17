@@ -115,10 +115,10 @@ const updateAfterResetPassword = async (req, res) => {
     const user = await User.findOne({ email},{resetToken:token});
 
     if (!user) {
-      throw Error('Invalid or expired token');
+     return res.status(400).json({error:'Invalid or expired token'});
     }
     if(user.resetTokenExpires < Date.now()){
-        throw Error('expired token')
+       return res.status(400).json({error:'expired token'});
     }
 
     // Update password
