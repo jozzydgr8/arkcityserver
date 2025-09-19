@@ -2,8 +2,9 @@ const router = require('express').Router();
 const Subscribe = require('../MongooseSchema/SubscribeSchema');
 const validator = require('validator');
 const sendEmail = require('../config/mailer');
+const authenticator = require('../middleware/authenticator')
 
-router.get('/', async(req,res)=>{
+router.get('/', authenticator, async(req,res)=>{
     try{
         const data = await Subscribe.find({});
         res.status(200).json(data);
