@@ -4,7 +4,7 @@ const mongoose  = require('mongoose');
 const getReadings = async(req, res)=>{
     try{
         const readings = await Read.find({});
-        res.status(200).json({readings:readings})
+        res.status(200).json(readings)
     }catch(error){
         res.status(400).json({error:error})
     }
