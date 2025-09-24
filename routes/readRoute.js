@@ -1,8 +1,10 @@
-const { addOpeningReading, updateclosingReading, getReadings } = require('../controller/readingController');
+const { addOpeningReading, updateclosingReading, getReadings} = require('../controller/readingController');
 const router = require('express').Router();
+const superadmin = require('../middleware/superAuthenticator');
 
-router.post('/', addOpeningReading);
-router.put('/:id', updateclosingReading);
-router.get('/',getReadings)
+router.post('/',superadmin, addOpeningReading);
+router.put('/:id',superadmin,  updateclosingReading);
+router.get('/',superadmin, getReadings);
+
 
 module.exports =router

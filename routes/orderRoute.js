@@ -1,5 +1,5 @@
 const router = require('express').Router();
-const { getOrder, verifyAndPostOrder, updateOrder } = require('../controller/orderController');
+const { getOrder, verifyAndPostOrder, updateOrder} = require('../controller/orderController');
 const Order = require('../MongooseSchema/OrderSchema');
 const authenticator = require('../middleware/authenticator');
 

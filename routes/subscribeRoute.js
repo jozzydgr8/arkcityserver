@@ -2,6 +2,7 @@ const router = require('express').Router();
 const Subscribe = require('../MongooseSchema/SubscribeSchema');
 const validator = require('validator');
 const sendEmail = require('../config/mailer');
+
 const authenticator = require('../middleware/authenticator')
 
 router.get('/', authenticator, async(req,res)=>{
@@ -51,4 +52,5 @@ router.post('/', async(req,res)=>{
         res.status(400).json({error:error})
     }
 })
+
 module.exports=router
