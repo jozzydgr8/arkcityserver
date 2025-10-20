@@ -13,6 +13,9 @@ app.use('/message', require('./routes/emailRoute'));
 app.use('/order',require('./routes/orderRoute'));
 app.use('/subscribe', require('./routes/subscribeRoute'));
 app.use('/reading', require('./routes/readRoute'))
+app.use('/reading_refill', require('./routes/refillRoute'));
+app.use('/reading_total', require('./routes/TotalRoute'));
+app.use('/reading_combined', require('./routes/combinedReadingRoute'));
 
 mongoose.connect(process.env.mongoosestring)
 .then(()=>{

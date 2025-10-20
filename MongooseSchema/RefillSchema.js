@@ -1,8 +1,7 @@
 const mongoose = require('mongoose');
 
-const readSchema = new mongoose.Schema({
- 
-    dailyReading:{
+const Refill = mongoose.Schema({
+    amountAdded:{
         type:Number,
         required:true
     },
@@ -10,6 +9,6 @@ const readSchema = new mongoose.Schema({
         type:String,
         required:true
     }
-}, {timestamps:true});
+}, {timestamps:true})
 
-module.exports = mongoose.model('readings',readSchema)
+module.exports=mongoose.model('Refill', Refill)

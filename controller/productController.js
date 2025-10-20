@@ -51,7 +51,7 @@ const postProduct = async (req, res) => {
       image_id:result.public_id,
       category
     });
-    console.log(result);
+    
     res.status(200).json(product);
   } catch (error) {
     console.error('Upload error:', error);
