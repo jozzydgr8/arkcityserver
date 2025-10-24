@@ -12,13 +12,13 @@ const getReadings = async(req, res)=>{
 }
 
 const addDailyReading = async (req,res)=>{
-  const {closingReading} = req.body;
+  const {dailyReading} = req.body;
   const today = new Date().toISOString().split('T')[0];
   const startOfDay = new Date(`${today}T00:00:00.000Z`);
   const endOfDay = new Date(`${today}T23:59:59.999Z`);
 
-  if (typeof closingReading !== 'number') {
-  return res.status(400).json({ error: 'Invalid or missing closingReading' });
+  if (typeof dailyReading !== 'number') {
+  return res.status(400).json({ error: 'Invalid or missing dailyReading' });
   }
 
   try{
@@ -36,7 +36,7 @@ const addDailyReading = async (req,res)=>{
     if(!getCurrentTotal){
       return res.status(400).json({error:'Total Balance has not been set'});
     }
-    const newBalance = getCurrentTotal.currentBalance - closingReading;
+    const newBalance = getCurrentTotal.currentBalance - dailyReading;
 
     if (newBalance < 0){
      return res.status(400).json({error:'reading has surpassed the total'})
@@ -45,7 +45,7 @@ const addDailyReading = async (req,res)=>{
     const newTotalBalance = await Total.findOneAndUpdate({_id:getCurrentTotal._id},{
       currentBalance:newBalance
     },{ new: true })
-    const dailyReading = await DailyReading.create({dailyReading:closingReading, balance:newBalance});
+    const dailyReading = await DailyReading.create({dailyReading:dailyReading, balance:newBalance});
     
     res.status(200).json({dailyReading:dailyReading, totalBalance:newTotalBalance})
   }catch(error){
@@ -85,7 +85,7 @@ const addDailyReading = async (req,res)=>{
 
 // const updateclosingReading = async(req,res)=>{
     
-//     const {closingReading} = req.body;
+//     const {dailyReading} = req.body;
 
 //     if(!mongoose.Types.ObjectId.isValid(id)){
 //         return res.status(400).json({error:'invalid request'})
@@ -106,12 +106,12 @@ const addDailyReading = async (req,res)=>{
 //                 return res.status(400).json({ error: 'Cannot add closing reading: this record is not from today' });
 //                 }
 
-//                 // Check if closingReading is already set
-//                 if (getReading.closingReading != null) {
+//                 // Check if dailyReading is already set
+//                 if (getReading.dailyReading != null) {
 //                 // not strictly `!== null`, but also covers undefined; depends on your schema default
 //                 return res.status(400).json({ error: 'Closing reading already set for today' });
 //                 }
-//         const reading = await DailyReading.findOneAndUpdate({_id:id},{closingReading}, {new:true});
+//         const reading = await DailyReading.findOneAndUpdate({_id:id},{dailyReading}, {new:true});
 //         res.status(200).json({message:'closing reading added succesfully',reading});
 
 //     }catch(error){
