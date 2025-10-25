@@ -1,8 +1,9 @@
 const router = require('express').Router();
 const Refill = require('../MongooseSchema/RefillSchema');
 const Daily = require('../MongooseSchema/ReadingsSchema');
+const authenticator = require('../middleware/authenticator')
 
-router.get('/', async(req,res)=>{
+router.get('/', authenticator,async(req,res)=>{
     try{
     const refillData = await Refill.find({}).lean();
     const dailyData = await Daily.find({}).lean(); 
