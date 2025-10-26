@@ -5,7 +5,7 @@ const authenticator = require('../middleware/authenticator')
 router.post('/',authenticator, addDailyReading);
 
 router.get('/',authenticator, getReadings);
-//  router.delete('/:id', deleteReading)
+// router.delete('/:id', deleteReading)
 
 
 module.exports =router

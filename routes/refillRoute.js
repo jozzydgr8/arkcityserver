@@ -4,6 +4,6 @@ const authenticator = require('../middleware/authenticator')
 
 router.post('/', authenticator, addRefill);
 router.get('/',authenticator, getRefill);
-// router.delete('/:id', deleteRefill);
+//router.delete('/:id', deleteRefill);
 
 module.exports=router;
