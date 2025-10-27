@@ -6,6 +6,11 @@ const readSchema = new mongoose.Schema({
         type:Number,
         required:true
     },
+
+    closingReading:{
+        type:Number,
+        required:true
+    },
     balance:{
         type:String,
         required:true

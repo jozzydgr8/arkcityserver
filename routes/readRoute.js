@@ -2,10 +2,10 @@ const { addDailyReading, getReadings, deleteReading} = require('../controller/re
 const router = require('express').Router();
 const admin = require('../middleware/authenticator');
 const authenticator = require('../middleware/authenticator')
-router.post('/',authenticator, addDailyReading);
+router.post('/',authenticator,addDailyReading);
 
-router.get('/',authenticator, getReadings);
-// router.delete('/:id', deleteReading)
+router.get('/',authenticator,getReadings);
+//  router.delete('/:id', deleteReading)
 
 
 module.exports =router

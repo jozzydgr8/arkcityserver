@@ -11,114 +11,84 @@ const getReadings = async(req, res)=>{
     }
 }
 
-const addDailyReading = async (req,res)=>{
-  const {closingReading} = req.body;
+const addDailyReading = async (req, res) => {
+  const { closingReading } = req.body;
   const today = new Date().toISOString().split('T')[0];
   const startOfDay = new Date(`${today}T00:00:00.000Z`);
   const endOfDay = new Date(`${today}T23:59:59.999Z`);
 
   if (typeof closingReading !== 'number') {
-  return res.status(400).json({ error: 'Invalid or missing closingReading' });
+    return res.status(400).json({ error: 'Invalid or missing closingReading' });
   }
 
-  try{
-      const checkDaily = await DailyReading.findOne({
-      createdAt: {
-        $gte: startOfDay,
-        $lte: endOfDay
-      }
+  try {
+    // Prevent duplicate daily reading
+    const checkDaily = await DailyReading.findOne({
+      createdAt: { $gte: startOfDay, $lte: endOfDay },
     });
 
-    if (checkDaily){
-      return res.status(400).json({error:'daily reading has already been set!'})
+    if (checkDaily) {
+      return res.status(400).json({ error: 'Daily reading has already been set!' });
     }
+
+    // Get last reading
+    const lastDailyReading = await DailyReading.findOne().sort({ createdAt: -1 });
+
+    // Handle first ever reading
+    let dailySold = 0;
+    if (lastDailyReading) {
+      if (closingReading < lastDailyReading.closingReading) {
+        return res.status(400).json({ error: 'New reading must be greater than previous one' });
+      }
+      dailySold = closingReading - lastDailyReading.closingReading;
+    } else {
+      // First reading — nothing sold yet
+      dailySold = closingReading;
+    }
+
+    // Get total balance
     const getCurrentTotal = await Total.findOne({});
-    if(!getCurrentTotal){
-      return res.status(400).json({error:'Total Balance has not been set'});
-    }
-    const newBalance = getCurrentTotal.currentBalance - closingReading;
-
-    if (newBalance < 0){
-     return res.status(400).json({error:'reading has surpassed the total'})
+    if (!getCurrentTotal) {
+      return res.status(400).json({ error: 'Total Balance has not been set' });
     }
 
-    const newTotalBalance = await Total.findOneAndUpdate({_id:getCurrentTotal._id},{
-      currentBalance:newBalance
-    },{ new: true })
-    const dailyReading = await DailyReading.create({dailyReading:closingReading, balance:newBalance});
-    
-    res.status(200).json({dailyReading:dailyReading, totalBalance:newTotalBalance})
-  }catch(error){
-    res.status(500).json({error:error})
+    // Compute new balance
+    const newBalance = getCurrentTotal.currentBalance - dailySold;
+
+    if (newBalance < 0) {
+      return res.status(400).json({ error: 'Reading has surpassed the total balance' });
+    }
+
+    console.log({
+  currentBalance: getCurrentTotal?.currentBalance,
+  dailySold,
+  closingReading,
+  lastClosingReading: lastDailyReading?.closingReading
+});
+    // Update total
+    const newTotalBalance = await Total.findOneAndUpdate(
+      { _id: getCurrentTotal._id },
+      { currentBalance: newBalance },
+      { new: true }
+    );
+
+    // Save new daily reading
+    const dailyReading = await DailyReading.create({
+      closingReading,
+      dailyReading: dailySold,
+      balance: newBalance,
+    });
+
+    res.status(200).json({
+      dailyReading,
+      totalBalance: newTotalBalance,
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: error.message });
   }
-}
-// const addOpeningReading = async (req, res) => {
-//   const { openingReading } = req.body;
+};
 
-//   try {
-//     // Get today's date range in UTC
-//     const today = new Date().toISOString().split('T')[0]; // 'YYYY-MM-DD'
-//     const startOfDay = new Date(`${today}T00:00:00.000Z`);
-//     const endOfDay = new Date(`${today}T23:59:59.999Z`);
-
-//     // Check if a reading already exists for today
-//     const existingReading = await DailyReading.findOne({
-//       createdAt: {
-//         $gte: startOfDay,
-//         $lte: endOfDay
-//       }
-//     });
-
-//     if (existingReading) {
-//       return res.status(400).json({ error: 'Opening reading already added for today' });
-//     }
-
-//     // Create new reading
-//     const reading = await DailyReading.create({ openingReading });
-//     res.status(200).json({ message: 'Product added successfully', reading });
-
-//   } catch (error) {
-//     res.status(400).json({ error: error.message });
-//   }
-// };
-
-
-// const updateclosingReading = async(req,res)=>{
-    
-//     const {closingReading} = req.body;
-
-//     if(!mongoose.Types.ObjectId.isValid(id)){
-//         return res.status(400).json({error:'invalid request'})
-//     }
-   
-//     try{
-//         const getReading = await DailyReading.findById(id);
-//         if(!getReading){
-//             return res.status(400).json({error:'Opening Reading does not exist'})
-//         }
-//             // Check if this reading was created today
-//                 const createdAt = getReading.createdAt;
-//                 const today = new Date().toISOString().split('T')[0]; // YYYY-MM-DD
-//                 const startOfDay = new Date(`${today}T00:00:00.000Z`);
-//                 const endOfDay = new Date(`${today}T23:59:59.999Z`);
-
-//                 if (createdAt < startOfDay || createdAt > endOfDay) {
-//                 return res.status(400).json({ error: 'Cannot add closing reading: this record is not from today' });
-//                 }
-
-//                 // Check if closingReading is already set
-//                 if (getReading.closingReading != null) {
-//                 // not strictly `!== null`, but also covers undefined; depends on your schema default
-//                 return res.status(400).json({ error: 'Closing reading already set for today' });
-//                 }
-//         const reading = await DailyReading.findOneAndUpdate({_id:id},{closingReading}, {new:true});
-//         res.status(200).json({message:'closing reading added succesfully',reading});
-
-//     }catch(error){
-//         res.status(400).json({error:error.message})
-//     }
-
-// }
 
 const deleteReading = async (req, res) => {
   const { id } = req.params;
