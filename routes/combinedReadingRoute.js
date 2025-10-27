@@ -3,7 +3,7 @@ const Refill = require('../MongooseSchema/RefillSchema');
 const Daily = require('../MongooseSchema/ReadingsSchema');
 const authenticator = require('../middleware/authenticator')
 
-router.get('/',async(req,res)=>{
+router.get('/',authenticator,async(req,res)=>{
     try{
     const refillData = await Refill.find({}).lean();
     const dailyData = await Daily.find({}).lean(); 
@@ -13,6 +13,7 @@ router.get('/',async(req,res)=>{
             date:item.createdAt,
             type:"sale",
             unitSold:item.dailyReading,
+            totalSold:item.closingReading,
             amountAdded:null,
             balanceAfter:item.balance
         })),
@@ -21,6 +22,7 @@ router.get('/',async(req,res)=>{
             date:item.createdAt,
             type:"refill",
             unitSold:null,
+            totalSold:null,
             amountAdded:item.amountAdded,
             balanceAfter:item.balance
         }))
